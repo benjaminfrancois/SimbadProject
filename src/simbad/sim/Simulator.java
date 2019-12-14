@@ -271,6 +271,7 @@ public class Simulator {
     }
     /** Starts the simulator loop. */
     public synchronized void startSimulation() {
+		try { Thread.sleep(3000); } catch (InterruptedException e1) {}
         stopSimulation();
         initBehaviors();
         timer = new Timer();

@@ -10,8 +10,9 @@ public class Character extends Agent {
 	
 	private int life;
 	RangeSensorBelt sonars;
-	
 	private int power;
+	
+	private int score;
 	
 	public Character(Vector3d pos, String name) {
 		super(pos, name);
@@ -39,7 +40,12 @@ public class Character extends Agent {
 			}
 		}
 		
+		System.out.println("Score : " + score);
+		
 	}
+
+	public void setScore(int score) { this.score += score; }
 	
 	public int getPower() { return this.power; }
+	public int getScore() { return this.score; }
 }

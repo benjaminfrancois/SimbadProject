@@ -15,7 +15,7 @@ public class MyEnv extends EnvironmentDescription {
 	ArrayList<Bullets> bullets = new ArrayList<Bullets>();
 	DeadOps controller;
 	
-	public MyEnv(DeadOps controller, int round) {
+	public MyEnv(DeadOps controller, int round, int score) {
 		
 		this.controller = controller;
 		
@@ -37,6 +37,7 @@ public class MyEnv extends EnvironmentDescription {
 			
 		//
 		character = new Character(new Vector3d(0, 0, 0), "Le tueur");
+		character.setScore(score);
 		
 		
 		for (int i = 0; i < round*5; i++) {
@@ -70,7 +71,7 @@ public class MyEnv extends EnvironmentDescription {
 		}
 		if(roundCleared) {
 			System.out.println("Round finish !!!!");
-			controller.roundUp();
+			controller.roundUp(character.getScore());
 		}
 		
 	}

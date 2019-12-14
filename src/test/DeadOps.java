@@ -8,24 +8,28 @@ public class DeadOps {
 	private Simbad frame;
 	
 	private int round;
+	private MyEnv myEnv;
 	
 	public DeadOps() {
 		
 		round = 1;
 		
-		roundUp();
+		roundUp(0);
 	}
 	
-	private void initFrame() {
-		frame = new Simbad(new MyEnv(this, round), false);
+	private void initFrame(int score) {
+		myEnv = null;
+		myEnv = new MyEnv(this, round, score);
+		frame = new Simbad(new MyEnv(this, round, score), false);
 	}
 	
-	public void roundUp() {
+	public void roundUp(int score) {
+		
 		if(frame != null) {
-			frame.dispose();
+			frame.killFrame();
 		}
 		round++;
-		initFrame();
+		initFrame(score);
 	}
 	
 	public Simulator getSimu() { return frame.getSimu(); }

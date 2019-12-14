@@ -50,6 +50,7 @@ public class Zombie extends Agent {
 				moveToPosition(20,  20);
 				isDead = true;
 				env.roundFinish();
+				cible.setScore(1);
 			}
 			
 			

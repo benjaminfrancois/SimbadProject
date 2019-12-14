@@ -60,6 +60,12 @@ import simbad.sim.Simulator;
 import simbad.sim.World;
 import test.Bullets;
 import test.Character;
+import test.Menu;
+
+import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
 
 /**
  * This is the Simbad application mainframe.
@@ -73,7 +79,6 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 	static final String version = "1.4";
 	static int SIZEX = 800;
 	static int SIZEY = 700;
-	JMenuBar menubar;
 	JDesktopPane desktop;
 	World world;
 	Simulator simulator;
@@ -84,6 +89,8 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 	private Character character;
 
 	static Simbad simbadInstance = null;
+	
+	private boolean isPaused;
 
 	/** Construct Simbad application with the given environement description */
 	public Simbad(EnvironmentDescription ed, boolean backgroundMode) {
@@ -97,13 +104,11 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		createGUI();
 		start(ed);
 		keyy();
-		simulator.startSimulation();
 		
 		simulator.setFramesPerSecond(30);
-		
+
 		// world.changeViewPoint(World.VIEW_FROM_TOP, null);
 		ArrayList<Object> tmp = simulator.getAgentList();
-		System.out.println(tmp);
 		for (Object o : tmp) {
 			if (o instanceof Character) {
 				character = (Character) o;
@@ -112,8 +117,12 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 				bullets.add((Bullets) o);
 			}
 		}
-
+		
+		isPaused = false;
 		setVisible(true);
+		
+		
+		pauseFrame();
 	}
 
 	private void keyy() {
@@ -126,6 +135,10 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		String backward_R = "backward_R";
 		String left_R = "left_R";
 		String right_R = "right_R";
+		
+		
+		
+		String pause = "pause";
 
 		InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 
@@ -140,6 +153,10 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true), backward_R);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), left_R);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0, true), right_R);
+		
+		
+		
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), pause);
 
 		ActionMap actionMap = getRootPane().getActionMap();
 
@@ -194,15 +211,32 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 				character.setRotationalVelocity(0);
 			}
 		});
+		
+
+		actionMap.put(pause, new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(isPaused) {
+					isPaused = !isPaused;
+					simulator.startSimulation();
+				} else {
+					isPaused = !isPaused;
+					simulator.stopSimulation();
+				}
+			}
+		});
 	}
 
 	/** Create the main GUI. Only called once. */
 	private void createGUI() {
 		desktop.setFocusable(true);
 		getContentPane().add(desktop);
-		// menubar = new JMenuBar();
-		// menubar.add(DemoManager.createMenu(this));
-		// setJMenuBar(menubar);
+	}
+	
+	private void pauseFrame() {
+		
+		new Menu(this);
+		
 	}
 
 	/** Starts (or Restarts after releaseRessources) the world and simulator. */
@@ -232,7 +266,7 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.add("Center", world.getCanvas3D());
-
+		
 		this.add(panel);
 	}
 
@@ -249,7 +283,7 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 	 * creates agent inspector window
 	 */
 	private AgentInspector createAgentInspector(Simulator simulator, int x, int y) {
-		ArrayList agents = simulator.getAgentList();
+		ArrayList<Object> agents = simulator.getAgentList();
 		SimpleAgent a = ((SimpleAgent) agents.get(0));
 		if (a instanceof Agent) {
 			AgentInspector ai = new AgentInspector((Agent) a, !backgroundMode, simulator);
@@ -362,7 +396,6 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 
 		bullets.get(indBullet).moveToPosition(p.getX(), p.getZ());
 		bullets.get(indBullet).rotateY(-Math.atan2(mouse.getZ(), mouse.getX()));
-		character.rotateY(Math.atan2(mouse.getZ(), mouse.getX()));
 
 		if (!bullets.get(indBullet).isFired()) {
 			bullets.get(indBullet).setFired(true);
@@ -383,4 +416,12 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 	public void mouseMoved(MouseEvent arg0) {
 
 	}
+	
+	public void killFrame() {
+		this.simulator.stopSimulation();
+		this.dispose();
+	}
+	
+	public Character getChara()           { return character;  }
+	public void      setPaused(boolean t) { this.isPaused = t; }
 }
