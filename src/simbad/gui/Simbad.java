@@ -362,6 +362,7 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 
 		bullets.get(indBullet).moveToPosition(p.getX(), p.getZ());
 		bullets.get(indBullet).rotateY(-Math.atan2(mouse.getZ(), mouse.getX()));
+		character.rotateY(Math.atan2(mouse.getZ(), mouse.getX()));
 
 		if (!bullets.get(indBullet).isFired()) {
 			bullets.get(indBullet).setFired(true);
