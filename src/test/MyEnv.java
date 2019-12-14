@@ -2,6 +2,7 @@ package test;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
@@ -15,7 +16,7 @@ public class MyEnv extends EnvironmentDescription {
 	ArrayList<Bullets> bullets = new ArrayList<Bullets>();
 	DeadOps controller;
 	
-	public MyEnv(DeadOps controller, int round, int score) {
+	public MyEnv(DeadOps controller, int round, int score, int power, int speed) {
 		
 		this.controller = controller;
 		
@@ -38,10 +39,22 @@ public class MyEnv extends EnvironmentDescription {
 		//
 		character = new Character(new Vector3d(0, 0, 0), "Le tueur");
 		character.setScore(score);
+		character.setPower(power);
+		character.setSpeed(speed);
 		
 		
 		for (int i = 0; i < round*5; i++) {
-			add(new Zombie(new Vector3d((int)(Math.random()* 9), 0, (int)(Math.random()* 9)), "Le tueur", character, this));
+
+		    double x = 0;
+			while(x > -4 && x < 4) {
+			    x = -12 + (double) (Math.random() * ((12 - (-12))));
+			}
+		    double y = 0;
+			while(y > -4 && y < 4) {
+			    y = -12 + (double) (Math.random() * ((12 - (-12))));
+			}
+
+			add(new Zombie(new Vector3d(x, 0, y), "Le tueur", character, this, round));
 		}
 		
 		for(int i = 0; i < 200; i++) {
@@ -71,9 +84,8 @@ public class MyEnv extends EnvironmentDescription {
 		}
 		if(roundCleared) {
 			System.out.println("Round finish !!!!");
-			controller.roundUp(character.getScore());
+			controller.roundUp(character.getScore(), character.getPower(), character.getSpeed());
 		}
-		
 	}
 
 }

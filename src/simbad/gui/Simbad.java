@@ -36,8 +36,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
+import javax.imageio.ImageIO;
 import javax.media.j3d.Transform3D;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -53,6 +57,8 @@ import javax.swing.KeyStroke;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import com.sun.xml.internal.ws.util.CompletedFuture;
+
 import simbad.sim.Agent;
 import simbad.sim.EnvironmentDescription;
 import simbad.sim.SimpleAgent;
@@ -61,6 +67,7 @@ import simbad.sim.World;
 import test.Bullets;
 import test.Character;
 import test.Menu;
+import test.SoundEffect;
 
 import javax.swing.JTextField;
 import java.awt.Color;
@@ -105,6 +112,15 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		start(ed);
 		keyy();
 		
+
+		try {
+			InputStream imgStream = this.getClass().getResourceAsStream("/icon.png" );
+			BufferedImage myImg = ImageIO.read(imgStream);
+			this.setIconImage(myImg);
+		} catch (Exception whoJackedMyIco) {
+			System.out.println("Could not load program icon.");
+		}
+		
 		simulator.setFramesPerSecond(30);
 
 		// world.changeViewPoint(World.VIEW_FROM_TOP, null);
@@ -126,6 +142,7 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 	}
 
 	private void keyy() {
+				
 		String forward = "forward";
 		String backward = "backward";
 		String left = "left";
@@ -216,12 +233,10 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		actionMap.put(pause, new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(isPaused) {
-					isPaused = !isPaused;
-					simulator.startSimulation();
-				} else {
+				if(!isPaused) {
 					isPaused = !isPaused;
 					simulator.stopSimulation();
+					pauseFrame();
 				}
 			}
 		});
@@ -371,45 +386,51 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 
-		try {
-			Thread.sleep(100);
-		} catch (Exception e) {
+		
+		if(!isPaused) {
+
+			try {
+				Thread.sleep(200-(long) ((character.getSpeed()+10) * (character.getSpeed()*0.1)));
+			} catch (Exception e) {
+			}
+			
+			double mouseX, mouseY;
+			mouseX = ((arg0.getX() - 80) * 100.0) / (this.getSize().width - (80 * 2));
+			mouseY = ((arg0.getY() - 17) * 100.0) / (this.getSize().height - (30 * 2));
+
+			Point3d p = new Point3d();
+			character.getCoords(p);
+
+			double playerX, playerZ;
+			playerX = ((p.getX() + 24.9 / 2.0) * 100.0) / 24.9;
+			playerZ = ((p.getZ() + 24.9 / 2.0) * 100.0) / 24.9;
+
+			Vector3d mouse = new Vector3d(mouseX, 0, mouseY);
+			Vector3d center = new Vector3d(playerX, 0, playerZ);
+
+			mouse.sub(center);
+
+			mouse.normalize();
+
+			bullets.get(indBullet).moveToPosition(p.getX(), p.getZ());
+			bullets.get(indBullet).rotateY(-Math.atan2(mouse.getZ(), mouse.getX()));
+
+			if (!bullets.get(indBullet).isFired()) {
+				bullets.get(indBullet).setFired(true);
+
+				if (indBullet == 199)
+					indBullet = 0;
+				indBullet++;
+			}
+			try {
+				Robot objMouse = new Robot();
+				PointerInfo a = MouseInfo.getPointerInfo();
+
+				objMouse.mouseMove((int) a.getLocation().getX(), (int) a.getLocation().getY());
+			} catch (Exception e) {}
+			SoundEffect.TIRE.play();
+
 		}
-
-		double mouseX, mouseY;
-		mouseX = ((arg0.getX() - 80) * 100.0) / (this.getSize().width - (80 * 2));
-		mouseY = ((arg0.getY() - 17) * 100.0) / (this.getSize().height - (30 * 2));
-
-		Point3d p = new Point3d();
-		character.getCoords(p);
-
-		double playerX, playerZ;
-		playerX = ((p.getX() + 24.9 / 2.0) * 100.0) / 24.9;
-		playerZ = ((p.getZ() + 24.9 / 2.0) * 100.0) / 24.9;
-
-		Vector3d mouse = new Vector3d(mouseX, 0, mouseY);
-		Vector3d center = new Vector3d(playerX, 0, playerZ);
-
-		mouse.sub(center);
-
-		mouse.normalize();
-
-		bullets.get(indBullet).moveToPosition(p.getX(), p.getZ());
-		bullets.get(indBullet).rotateY(-Math.atan2(mouse.getZ(), mouse.getX()));
-
-		if (!bullets.get(indBullet).isFired()) {
-			bullets.get(indBullet).setFired(true);
-
-			if (indBullet == 199)
-				indBullet = 0;
-			indBullet++;
-		}
-		try {
-			Robot objMouse = new Robot();
-			PointerInfo a = MouseInfo.getPointerInfo();
-
-			objMouse.mouseMove((int) a.getLocation().getX(), (int) a.getLocation().getY());
-		} catch (Exception e) {}
 	}
 
 	@Override
@@ -424,4 +445,5 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 	
 	public Character getChara()           { return character;  }
 	public void      setPaused(boolean t) { this.isPaused = t; }
+	
 }

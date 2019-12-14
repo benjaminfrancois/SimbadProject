@@ -25,7 +25,7 @@ public class Zombie extends Agent {
 	
 	private int life;
 	
-	public Zombie(Vector3d pos, String name, Character cible, MyEnv env) {
+	public Zombie(Vector3d pos, String name, Character cible, MyEnv env, int round) {
 		super(pos, name);
 		this.env = env;
 		setColor(new Color3f(255, 0, 0));
@@ -34,7 +34,7 @@ public class Zombie extends Agent {
 		sonars = RobotFactory.addBumperBeltSensor(this, 16);
 		power = 10;
 		
-		life = 50;
+		life = 50+round*2;
 		
 	}
 	
@@ -69,7 +69,7 @@ public class Zombie extends Agent {
 			for(int i = 0; i < sonars.getNumSensors(); i++) {
 				if(sonars.hasHit(i)) {
 					
-					rotateY(-(sonars.getSensorAngle(i)));
+					rotateY(Math.floor(Math.random() * 2*Math.PI) + 1);
 					setTranslationalVelocity(3);
 					test = false;
 				}
@@ -80,7 +80,7 @@ public class Zombie extends Agent {
 					Bullets tmp = (Bullets)getVeryNearAgent();
 					tmp.moveToStartPosition();
 					tmp.setFired(false);
-					life -= cible.getPower();
+					life -= (cible.getPower()+20) * (cible.getPower()*0.2);
 				}
 			}
 			

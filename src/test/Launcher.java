@@ -13,8 +13,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
@@ -28,10 +31,14 @@ import javax.swing.JLabel;
 import java.awt.Window.Type;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class Launcher {
+public class Launcher implements MouseListener{
 
 	private JFrame frmMicrobeOpsArcade;
+	private OptionFrame optionFrame;
+	private JButton btnNewButton;
+	private JButton btnOption;
 
 	/**
 	 * Launch the application.
@@ -47,6 +54,8 @@ public class Launcher {
 				}
 			}
 		});
+		
+
 	}
 
 	/**
@@ -69,68 +78,61 @@ public class Launcher {
 		frmMicrobeOpsArcade.getContentPane().setLayout(null);
 		
 		try {
-			Image icon = Toolkit.getDefaultToolkit().getImage("data/icon.png");  
-			frmMicrobeOpsArcade.setIconImage(icon);
+			InputStream imgStream = this.getClass().getResourceAsStream("/icon.png" );
+			BufferedImage myImg = ImageIO.read(imgStream);
+			frmMicrobeOpsArcade.setIconImage(myImg);
 		} catch (Exception whoJackedMyIcon) {
 			System.out.println("Could not load program icon.");
 		}
 		
-		JButton btnNewButton = new JButton("! PLAY !");
-		btnNewButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				
-				try {
-					Launcher.displayTray("Game launched !", "Have fun !");
-				} catch (AWTException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				//new DeadOps();
-			}
-		});
+		btnNewButton = new JButton("! PLAY !");
+		btnNewButton.addMouseListener(this);
 		btnNewButton.setFont(new Font("Wide Latin", Font.PLAIN, 11));
 		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton.setBounds(70, 80, 131, 64);
+		btnNewButton.setBounds(10, 136, 125, 58);
 		frmMicrobeOpsArcade.getContentPane().add(btnNewButton);
 		
-		JLabel lblMicrobeOpsArcade = new JLabel("Microbe Ops Arcade");
-		lblMicrobeOpsArcade.setForeground(Color.WHITE);
-		lblMicrobeOpsArcade.setFont(new Font("Wide Latin", Font.PLAIN, 16));
-		lblMicrobeOpsArcade.setBounds(83, 11, 292, 58);
-		frmMicrobeOpsArcade.getContentPane().add(lblMicrobeOpsArcade);
-		
-		JButton btnOption = new JButton("OPTION");
+		btnOption = new JButton("OPTIONS");
+		btnOption.addMouseListener(this);
 		btnOption.setFont(new Font("Wide Latin", Font.PLAIN, 11));
 		btnOption.setBackground(Color.WHITE);
-		btnOption.setBounds(245, 80, 131, 64);
+		btnOption.setBounds(345, 142, 130, 52);
 		frmMicrobeOpsArcade.getContentPane().add(btnOption);
 		
 		JLabel lblThomasCogezalix = new JLabel("Thomas Cogez--Alix");
 		lblThomasCogezalix.setFont(new Font("Calibri", Font.BOLD, 13));
 		lblThomasCogezalix.setForeground(Color.WHITE);
-		lblThomasCogezalix.setBounds(20, 175, 120, 14);
+		lblThomasCogezalix.setBounds(10, 211, 120, 14);
 		frmMicrobeOpsArcade.getContentPane().add(lblThomasCogezalix);
 		
 		JLabel lblBenjaminFranois = new JLabel("Benjamin Fran\u00E7ois");
 		lblBenjaminFranois.setForeground(Color.WHITE);
 		lblBenjaminFranois.setFont(new Font("Calibri", Font.BOLD, 13));
-		lblBenjaminFranois.setBounds(185, 175, 102, 14);
+		lblBenjaminFranois.setBounds(207, 175, 102, 14);
 		frmMicrobeOpsArcade.getContentPane().add(lblBenjaminFranois);
 		
 		JLabel lblLoPrvost = new JLabel("L\u00E9o Pr\u00E9vost");
 		lblLoPrvost.setForeground(Color.WHITE);
 		lblLoPrvost.setFont(new Font("Calibri", Font.BOLD, 13));
-		lblLoPrvost.setBounds(365, 175, 102, 14);
+		lblLoPrvost.setBounds(373, 211, 102, 14);
 		frmMicrobeOpsArcade.getContentPane().add(lblLoPrvost);
-		frmMicrobeOpsArcade.setBounds(100, 100, 450, 230);
+		
+		JLabel label = new JLabel("");
+		
+		try {
+			label.setIcon(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/image1.png"))));
+		} catch (IOException e) {}
+		
+		label.setForeground(Color.WHITE);
+		label.setFont(new Font("Dialog", Font.PLAIN, 16));
+		label.setBounds(-185, 0, 748, 433);
+		frmMicrobeOpsArcade.getContentPane().add(label);
+		frmMicrobeOpsArcade.setBounds(100, 100, 491, 265);
 		frmMicrobeOpsArcade.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-
+		SoundEffect.AMBIANCE.play();
+		
+		
 	}
 	
 	public static void displayTray(String title, String descr) throws AWTException {
@@ -141,6 +143,45 @@ public class Launcher {
         trayIcon.setToolTip("System tray icon demo");
         tray.add(trayIcon);
         trayIcon.displayMessage(title, descr, MessageType.WARNING);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if(e.getSource() == this.btnNewButton) {
+			if(this.optionFrame == null) {
+				new DeadOps(0, 1, true);
+			} else {
+				new DeadOps(this.optionFrame.getStartPoint(), this.optionFrame.getRoundStart(), this.optionFrame.getSound());
+			}
+		}
+		if(e.getSource() == this.btnOption) {
+			optionFrame = new OptionFrame();
+		}
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

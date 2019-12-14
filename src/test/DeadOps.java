@@ -10,34 +10,36 @@ public class DeadOps {
 	private int round;
 	private MyEnv myEnv;
 	
-	public DeadOps() {
+	public DeadOps(int score, int round, boolean sound) {
 		
-		round = 1;
+		this.round = round;
 		
-		roundUp(0);
+		System.out.println(round);
+		
+		roundUp(score, 1, 1);
+		
+		if(!sound) SoundEffect.volume = SoundEffect.Volume.MUTE;
+
+		SoundEffect.START.play();
+		
 	}
 	
-	private void initFrame(int score) {
+	private void initFrame(int score, int power, int speed) {
 		myEnv = null;
-		myEnv = new MyEnv(this, round, score);
-		frame = new Simbad(new MyEnv(this, round, score), false);
+		myEnv = new MyEnv(this, round, score, power, speed);
+		frame = new Simbad(myEnv, false);
 	}
 	
-	public void roundUp(int score) {
-		
+	public void roundUp(int score, int power, int speed) {
+		if(round > 1) {
+			SoundEffect.NEXT_ROUND.play();
+		}
 		if(frame != null) {
 			frame.killFrame();
 		}
 		round++;
-		initFrame(score);
+		initFrame(score, power, speed);
 	}
 	
 	public Simulator getSimu() { return frame.getSimu(); }
-	
-	public static void main(String[] args) {
-		
-		System.setProperty("j3d.implicitAntialiasing", "true");
-		
-		new DeadOps();
-	}
 }
