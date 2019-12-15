@@ -28,7 +28,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
-import test.Zombie;
+import deadops.Zombie;
 
 import java.util.ArrayList;
 /**

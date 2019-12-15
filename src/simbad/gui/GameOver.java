@@ -5,7 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import test.Launcher;
+import deadops.Launcher;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;

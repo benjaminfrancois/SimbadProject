@@ -58,18 +58,16 @@ import javax.swing.Timer;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import com.sun.xml.internal.ws.util.CompletedFuture;
-
+import deadops.DeadOps;
+import deadops.entities.*;
+import deadops.entities.Character;
+import deadops.gui.Menu;
+import deadops.utils.SoundEffect;
 import simbad.sim.Agent;
 import simbad.sim.EnvironmentDescription;
 import simbad.sim.SimpleAgent;
 import simbad.sim.Simulator;
 import simbad.sim.World;
-import test.Bullets;
-import test.Character;
-import test.DeadOps;
-import test.Menu;
-import test.SoundEffect;
 
 import javax.swing.JTextField;
 import java.awt.Color;

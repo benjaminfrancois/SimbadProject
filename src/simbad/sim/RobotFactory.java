@@ -27,7 +27,7 @@ package simbad.sim;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Vector3d;
 
-import test.Bullets;
+import deadops.Bullets;
 
 /**
  *  A helper class to aid building robot bodies and sensors.
