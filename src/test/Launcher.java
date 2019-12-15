@@ -135,6 +135,11 @@ public class Launcher implements MouseListener{
 		
 	}
 	
+	public void sound(boolean test) {
+		if(test) SoundEffect.AMBIANCE.play();
+		else SoundEffect.AMBIANCE.stop();
+	}
+	
 	public static void displayTray(String title, String descr) throws AWTException {
         SystemTray tray = SystemTray.getSystemTray();
         Image image = Toolkit.getDefaultToolkit().createImage("data/icon.png");
@@ -173,7 +178,7 @@ public class Launcher implements MouseListener{
 			}
 		}
 		if(e.getSource() == this.btnOption) {
-			optionFrame = new OptionFrame();
+			optionFrame = new OptionFrame(this);
 		}
 		
 	}

@@ -27,6 +27,8 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class OptionFrame extends JFrame implements MouseListener {
 
@@ -45,7 +47,7 @@ public class OptionFrame extends JFrame implements MouseListener {
 	/**
 	 * Create the frame.
 	 */
-	public OptionFrame() {
+	public OptionFrame(Launcher ctrl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -118,6 +120,11 @@ public class OptionFrame extends JFrame implements MouseListener {
 		contentPane.add(lblActiverLeSon);
 		
 		chckbxOui = new JCheckBox("Oui");
+		chckbxOui.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				ctrl.sound(((JCheckBox)arg0.getSource()).isSelected());
+			}
+		});
 		chckbxOui.setSelected(true);
 		chckbxOui.setForeground(Color.WHITE);
 		chckbxOui.setBackground(Color.DARK_GRAY);

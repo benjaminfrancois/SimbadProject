@@ -16,6 +16,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 
@@ -54,6 +56,7 @@ public class Menu {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		frame.getContentPane().setLayout(null);
+				
 		
 		JLabel lblScorescore = new JLabel("Score : " + ((simbad.getChara() != null)?simbad.getChara().getScore():"0"));
 		lblScorescore.setForeground(Color.WHITE);
@@ -68,6 +71,7 @@ public class Menu {
 			public void mousePressed(MouseEvent arg0) {
 				frame.dispose();
 				simbad.getSimu().startSimulation();
+				simbad.setPaused(false);
 			}
 		});
 		btnStartRound.setFont(new Font("Wide Latin", Font.PLAIN, 14));

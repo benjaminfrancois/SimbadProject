@@ -37,10 +37,10 @@ public class MyEnv extends EnvironmentDescription {
 		add(w1); add(w2); add(w3); add(w4);
 			
 		//
-		character = new Character(new Vector3d(0, 0, 0), "Le tueur");
+		character = new Character(new Vector3d(0, 0, 0), "Le tueur", this);
 		character.setScore(score);
-		character.setPower(power);
-		character.setSpeed(speed);
+		character.setPower(power-1);
+		character.setSpeed(speed-1);
 		
 		
 		for (int i = 0; i < round*5; i++) {
@@ -87,5 +87,8 @@ public class MyEnv extends EnvironmentDescription {
 			controller.roundUp(character.getScore(), character.getPower(), character.getSpeed());
 		}
 	}
-
+	
+	public void gameOver() {
+		controller.gameOver();
+	}
 }
