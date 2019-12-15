@@ -24,8 +24,8 @@
  */
 package simbad.sim;
 
-
 /**
  *
  */
-public class WorldFactory extends Factory {}
+public class WorldFactory extends Factory {
+}

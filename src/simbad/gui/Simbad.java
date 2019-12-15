@@ -27,7 +27,6 @@ package simbad.gui;
 
 import java.awt.BorderLayout;
 import java.awt.MouseInfo;
-import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.Robot;
 import java.awt.event.ActionEvent;
@@ -39,10 +38,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
 
 import javax.imageio.ImageIO;
-import javax.media.j3d.Transform3D;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -51,15 +48,13 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.Timer;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import deadops.DeadOps;
-import deadops.entities.*;
+import deadops.entities.Bullets;
 import deadops.entities.Character;
 import deadops.gui.GameOver;
 import deadops.gui.Menu;
@@ -70,17 +65,12 @@ import simbad.sim.SimpleAgent;
 import simbad.sim.Simulator;
 import simbad.sim.World;
 
-import javax.swing.JTextField;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-
 /**
  * This is the Simbad application mainframe.
  * 
  */
 public class Simbad extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
-	
+
 	private DeadOps ctrl;
 
 	private static final long serialVersionUID = 1L;
@@ -96,13 +86,12 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 	AgentInspector agentInspector = null;
 	boolean backgroundMode;
 
+	protected long jolieTimer;
 
-    protected long jolieTimer;
-	
 	private Character character;
 
 	static Simbad simbadInstance = null;
-	
+
 	private boolean isPaused;
 
 	/** Construct Simbad application with the given environement description */
@@ -117,17 +106,17 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		createGUI();
 		start(ed);
 		keyy();
-		
+
 		this.ctrl = ctrl;
 
 		try {
-			InputStream imgStream = this.getClass().getResourceAsStream("/icon.png" );
+			InputStream imgStream = this.getClass().getResourceAsStream("/icon.png");
 			BufferedImage myImg = ImageIO.read(imgStream);
 			this.setIconImage(myImg);
 		} catch (Exception whoJackedMyIco) {
 			System.out.println("Could not load program icon.");
 		}
-		
+
 		simulator.setFramesPerSecond(30);
 
 		// world.changeViewPoint(World.VIEW_FROM_TOP, null);
@@ -140,16 +129,15 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 				bullets.add((Bullets) o);
 			}
 		}
-		
+
 		isPaused = false;
 		setVisible(true);
-		
-		
+
 		pauseFrame();
 	}
 
 	private void keyy() {
-				
+
 		String forward = "forward";
 		String backward = "backward";
 		String left = "left";
@@ -159,7 +147,7 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		String backward_R = "backward_R";
 		String left_R = "left_R";
 		String right_R = "right_R";
-		
+
 		String pause = "pause";
 
 		InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -175,9 +163,7 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true), backward_R);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), left_R);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0, true), right_R);
-		
-		
-		
+
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), pause);
 
 		ActionMap actionMap = getRootPane().getActionMap();
@@ -233,12 +219,11 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 				character.setRotationalVelocity(0);
 			}
 		});
-		
 
 		actionMap.put(pause, new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!isPaused) {
+				if (!isPaused) {
 					isPaused = !isPaused;
 					simulator.stopSimulation();
 					pauseFrame();
@@ -252,11 +237,11 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		desktop.setFocusable(true);
 		getContentPane().add(desktop);
 	}
-	
+
 	private void pauseFrame() {
-		
+
 		new Menu(this);
-		
+
 	}
 
 	/** Starts (or Restarts after releaseRessources) the world and simulator. */
@@ -286,7 +271,7 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.add("Center", world.getCanvas3D());
-		
+
 		this.add(panel);
 	}
 
@@ -315,6 +300,7 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 			return null;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getActionCommand() == "demo") {
 			releaseRessources();
@@ -359,8 +345,10 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 		return simbadInstance;
 	}
 
-	public Simulator getSimu() { return simulator; }
-	
+	public Simulator getSimu() {
+		return simulator;
+	}
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
@@ -391,12 +379,12 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 
-		if(!isPaused) {
-			
-			long count = (200-(long) ((character.getSpeed()+10) * (character.getSpeed()*0.1)));
+		if (!isPaused) {
 
-			if(jolieTimer+count < System.currentTimeMillis()) {
-				
+			long count = (200 - (long) ((character.getSpeed() + 10) * (character.getSpeed() * 0.1)));
+
+			if (jolieTimer + count < System.currentTimeMillis()) {
+
 				try {
 					double mouseX, mouseY;
 					mouseX = ((arg0.getX() - 80) * 100.0) / (this.getSize().width - (80 * 2));
@@ -431,13 +419,15 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 						PointerInfo a = MouseInfo.getPointerInfo();
 
 						objMouse.mouseMove((int) a.getLocation().getX(), (int) a.getLocation().getY());
-					} catch (Exception e) {}
-					
+					} catch (Exception e) {
+					}
+
 					SoundEffect.TIRE.play();
 
-					
 					jolieTimer = System.currentTimeMillis();
-				} catch(Exception e) {e.printStackTrace();}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -446,20 +436,28 @@ public class Simbad extends JFrame implements ActionListener, MouseListener, Mou
 	public void mouseMoved(MouseEvent arg0) {
 
 	}
-	
+
 	public void killFrame() {
 		this.simulator.stopSimulation();
 		this.dispose();
 	}
-	
+
 	public void gameOver() {
 		System.out.println("Game over !");
 		simulator.stopSimulation();
 		isPaused = true;
 		new GameOver(this);
 	}
-	
-	public Character getChara()           { return character;  }
-	public void      setPaused(boolean t) { this.isPaused = t; }
-	public DeadOps   getCtrl()            { return this.ctrl;  }
+
+	public Character getChara() {
+		return character;
+	}
+
+	public void setPaused(boolean t) {
+		this.isPaused = t;
+	}
+
+	public DeadOps getCtrl() {
+		return this.ctrl;
+	}
 }

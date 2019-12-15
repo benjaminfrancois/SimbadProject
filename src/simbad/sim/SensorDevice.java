@@ -24,17 +24,12 @@
  */
 package simbad.sim;
 
-
-
 /**
- * An abstract sensor. 
+ * An abstract sensor.
  */
-public abstract class SensorDevice extends Device{
+public abstract class SensorDevice extends Device {
 
-  
-    SensorDevice() {
-    }
-   
+	SensorDevice() {
+	}
 
- 
 }

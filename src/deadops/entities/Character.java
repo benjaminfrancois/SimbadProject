@@ -30,9 +30,11 @@ public class Character extends Agent implements Cloneable {
 		this.env = env;
 	}
 
+	@Override
 	public void initBehavior() {
 	}
 
+	@Override
 	public void performBehavior() {
 
 		setCanBeTraversed(false);
@@ -42,36 +44,22 @@ public class Character extends Agent implements Cloneable {
 			}
 		}
 
-
-//		System.out.println(getVeryNearAgent());
-		/** Joueur touché par un zombie */
-		if (getVeryNearAgent() instanceof Zombie) {
-			System.out.println("[DEBUG] vie du joueur :"+life);
-			if (countDead + 200 < System.currentTimeMillis()) {
-				countDead = System.currentTimeMillis();
-				life -= 20;
-				
-				if (life <= 0) {
-					env.gameOver();
-				}
-			}
-		}
-		
 		/** Recupération d'un bonus par le joueur */
 		if (getVeryNearAgent() instanceof Bonus) {
 			char type = ((Bonus) getVeryNearAgent()).getType();
 			getVeryNearAgent().moveToPosition(new Vector3d(20, 0, 20));
-			if(type == 'H') {
+			if (type == 'H') {
 				this.life += 20;
-				System.out.println("[DEBUG] vie du joueur:"+life);
-			}else {
-				System.out.println("[DEBUG] score du joueur:"+score);
+				System.out.println("[DEBUG] vie du joueur:" + life);
+			} else {
+				System.out.println("[DEBUG] score du joueur:" + score);
 				this.setScore(10);
 			}
-			
+
 		}
 	}
 
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 
 		return super.clone();
@@ -89,8 +77,19 @@ public class Character extends Agent implements Cloneable {
 		this.speed += speed;
 	}
 
+	public void setLife(int life) {
+		this.life += life;
+		if (this.life <= 0) {
+			env.gameOver();
+		}
+	}
+
 	public int getPower() {
 		return this.power;
+	}
+
+	public int getLife() {
+		return this.life;
 	}
 
 	public int getScore() {

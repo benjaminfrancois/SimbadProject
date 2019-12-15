@@ -24,14 +24,12 @@
  */
 package simbad.sim;
 
-
 /**
  *
  */
-public abstract   class SensorData implements Cloneable{
-    
+public abstract class SensorData implements Cloneable {
 
+	@Override
+	abstract public Object clone();
 
-    abstract public Object clone();
-    
 }

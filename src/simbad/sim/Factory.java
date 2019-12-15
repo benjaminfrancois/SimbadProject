@@ -24,12 +24,11 @@
  */
 package simbad.sim;
 
-
 /**
  * Not used yet
  *
  */
 public abstract class Factory {
-    
+
 //TODO 
 }

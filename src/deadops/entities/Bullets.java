@@ -4,15 +4,11 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
 
 import simbad.sim.Agent;
-import simbad.sim.BallAgent;
-import simbad.sim.RangeSensorBelt;
-import simbad.sim.RobotFactory;
-import simbad.sim.SimpleAgent;
 
-public class Bullets extends Agent{
-	
+public class Bullets extends Agent {
+
 	private int count;
-	
+
 	public Bullets(Vector3d pos, String name) {
 		super(pos, name);
 		// TODO Auto-generated constructor stub
@@ -20,35 +16,38 @@ public class Bullets extends Agent{
 	}
 
 	private boolean fired;
-	
-    
-    public void setFired(boolean state) {
-  
-    	fired = state ;
-    	count = 0;
-    	
-    }
-    public boolean isFired() {
-    	return fired;
-    }
-	public void initBehavior() {}
-	
-	public void performBehavior() {	
-		
-		if(fired) {
+
+	public void setFired(boolean state) {
+
+		fired = state;
+		count = 0;
+
+	}
+
+	public boolean isFired() {
+		return fired;
+	}
+
+	@Override
+	public void initBehavior() {
+	}
+
+	@Override
+	public void performBehavior() {
+
+		if (fired) {
 			setTranslationalVelocity(10);
-		}else {
+		} else {
 			setTranslationalVelocity(0.0);
 		}
 
-
-		if(isFired()) {
+		if (isFired()) {
 			count++;
-			if(count == 50) {
+			if (count == 50) {
 				setFired(false);
 				moveToStartPosition();
 			}
 		}
 	}
-	
+
 }
