@@ -18,6 +18,8 @@ public class MyEnv extends EnvironmentDescription {
 	Character character;
 	ArrayList<Bullets> bullets = new ArrayList<Bullets>();
 	DeadOps controller;
+	private Bonus b;
+
 	
 	public MyEnv(DeadOps controller, int round, int score, int power, int speed) {
 		
@@ -25,8 +27,9 @@ public class MyEnv extends EnvironmentDescription {
 		
 		// world options
 		setUsePhysics(false);
+		
 		setWorldSize((float)24.9);
-
+		
 		Wall w1 = new Wall(new Vector3d(0,      0,  12.45), 25, 1, this);
 		Wall w2 = new Wall(new Vector3d(0,      0, -12.45), 25, 2, this);
 		Wall w3 = new Wall(new Vector3d(-12.45, 0, 0     ), 25, 1, this);
@@ -45,6 +48,10 @@ public class MyEnv extends EnvironmentDescription {
 		character.setPower(power-1);
 		character.setSpeed(speed-1);
 		
+		/**Ajout du bonus */
+		this.b = new Bonus(new Vector3d(20, 0, 20), "bonus", (float)0.5);
+
+		
 		
 		for (int i = 0; i < round*5; i++) {
 
@@ -57,7 +64,7 @@ public class MyEnv extends EnvironmentDescription {
 			    y = -12 + (double) (Math.random() * ((12 - (-12))));
 			}
 
-			add(new Zombie(new Vector3d(x, 0, y), "Le tueur", character, this, round));
+			add(new Zombie(new Vector3d(x, 0, y), "Le tueur", character, this, round,b));
 		}
 		
 		for(int i = 0; i < 200; i++) {
@@ -66,7 +73,10 @@ public class MyEnv extends EnvironmentDescription {
 		}
 		
 		add(character);
+		add(b);
 	}
+	
+	
 	
 	
 	public void roundFinish() {

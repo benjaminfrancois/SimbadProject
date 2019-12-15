@@ -15,7 +15,7 @@ public class Zombie extends Agent {
 
 
 	final double BASE_SPEED = 0.1;
-
+	private final double DROP_RATE = 0.1;  //10 %
 	private double speed = 1;
 	
 	private Character cible;
@@ -23,10 +23,11 @@ public class Zombie extends Agent {
 	private int power;
 	RangeSensorBelt sonars;
 	private MyEnv env;
+	private Bonus b;
 	
 	private int life;
 	
-	public Zombie(Vector3d pos, String name, Character cible, MyEnv env, int round) {
+	public Zombie(Vector3d pos, String name, Character cible, MyEnv env, int round, Bonus b){
 		super(pos, name);
 		this.env = env;
 		setColor(new Color3f(255, 0, 0));
@@ -34,7 +35,7 @@ public class Zombie extends Agent {
 		setCanBeTraversed(false);
 		sonars = RobotFactory.addBumperBeltSensor(this, 16);
 		power = 10;
-		
+		this.b = b;
 		life = 50+round*2;
 		
 	}
@@ -48,6 +49,15 @@ public class Zombie extends Agent {
 		if(!isDead) {
 
 			if(this.life <= 0 && isDead == false) {
+				double rand = Math.random();
+				if (rand > DROP_RATE) {
+					System.out.println("drop");
+					
+					Point3d currPos = new Point3d();
+					this.getCoords(currPos);
+					b.setRandomType();
+					b.moveToPosition(new Vector3d(currPos.getX(),0,currPos.getZ()));
+				}
 				moveToPosition(20,  20);
 				isDead = true;
 				env.roundFinish();
@@ -69,7 +79,6 @@ public class Zombie extends Agent {
 
 			for(int i = 0; i < sonars.getNumSensors(); i++) {
 				if(sonars.hasHit(i)) {
-					
 					rotateY(Math.floor(Math.random() * 2*Math.PI) + 1);
 					setTranslationalVelocity(3);
 					test = false;
