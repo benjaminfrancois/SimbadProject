@@ -252,7 +252,7 @@ class SimpleImage extends Frame {
 		
 		// Maze Display example
 		boolean display = false;
-		SimpleImage simpleimage = new SimpleImage("ressources/map1.png", display);
+		SimpleImage simpleimage = new SimpleImage("data/Image1.png", display);
 		simpleimage.displayInformation();
 		
 		for ( int y = 0 ; y != simpleimage.getHeight() ; y++ )
