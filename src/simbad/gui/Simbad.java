@@ -61,6 +61,7 @@ import javax.vecmath.Vector3d;
 import deadops.DeadOps;
 import deadops.entities.*;
 import deadops.entities.Character;
+import deadops.gui.GameOver;
 import deadops.gui.Menu;
 import deadops.utils.SoundEffect;
 import simbad.sim.Agent;

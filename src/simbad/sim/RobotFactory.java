@@ -27,8 +27,6 @@ package simbad.sim;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Vector3d;
 
-import deadops.Bullets;
-
 /**
  *  A helper class to aid building robot bodies and sensors.
  * It only contains only static methods and thus should not be instanciated. 
@@ -234,18 +232,5 @@ public class RobotFactory extends Factory {
        return (DifferentialKinematic)agent.getKinematicModel();
     }
 
-
-
-	public static RangeSensorBelt addBumperBeltSensor(Bullets bullets, int  nbSensors) {
-       // double agentHeight = agent.getHeight();
-        double agentRadius = bullets.getRadius();
-        RangeSensorBelt bumperBelt = new RangeSensorBelt((float) agentRadius-0.1f,
-                0f, 0.2f, nbSensors, RangeSensorBelt.TYPE_BUMPER,0);
-        bumperBelt.setUpdatePerSecond(6);
-        bumperBelt.setName("bumpers");
-        Vector3d pos = new Vector3d(0, 0, 0.0);
-        bullets.addSensorDevice(bumperBelt, pos, 0);
-        return bumperBelt;
-    }
     
 }

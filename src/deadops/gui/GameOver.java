@@ -1,11 +1,11 @@
-package simbad.gui;
+package deadops.gui;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import deadops.Launcher;
+import simbad.gui.Simbad;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
